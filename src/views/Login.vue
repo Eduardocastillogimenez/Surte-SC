@@ -7,6 +7,8 @@
             v-model="email"
             label="Correo electronico"
             :rules="emailRules"
+            clearable
+            variant="outlined"
         ></v-text-field>
 
         <v-text-field
@@ -15,6 +17,8 @@
             type="password"
             :rules="passwordRules"
             required
+            clearable
+            variant="outlined"
         ></v-text-field>
 
         <v-btn type="submit" block class="mt-2" color="blue-accent-3" rounded="xl">Inicio de sesion</v-btn>

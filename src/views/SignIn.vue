@@ -6,31 +6,39 @@
             v-model="firstName"
             label="Nombre"
             :rules="firstNameRules"
+            clearable
+            variant="outlined"
         ></v-text-field>
 
         <v-text-field
             v-model="email"
             label="Correo electronico"
             :rules="emailRules"
+            clearable
+            variant="outlined"
         ></v-text-field>
 
         <v-text-field
         v-model="password"
-        label="Password"
+        label="Contraseña"
         type="password"
         :rules="passwordRules"
         required
+        clearable
+        variant="outlined"
         ></v-text-field>
 
         <v-text-field
         v-model="confirmPassword"
-        label="Confirm Password"
+        label="Confirmar contraseña"
         type="password"
-        :rules="[confirmPasswordRules, passwordConfirmationRule]"
+        :rules="confirmPasswordRules"
         required
+        clearable
+        variant="outlined"
         ></v-text-field>
 
-        <v-btn type="submit" block class="mt-2">Registro</v-btn>
+        <v-btn type="submit" block class="mt-2" color="blue-accent-3" rounded="xl">Registro</v-btn>
     </v-form>
   </v-sheet>
 </template>
@@ -40,25 +48,22 @@
     data: () => ({
       firstName: '',
       firstNameRules: [
-        value => {
-          if (value?.length > 3) return true
-
-          return 'First name must be at least 3 characters.'
-        },
+        value => (value && value.length > 3) || 'El nombre debe tener al menos 3 caracteres.',
       ],
-      email: '123',
+      email: '',
       emailRules: [
-        value => {
-          if (/[^0-9]/.test(value)) return true
-
-          return 'email can not contain digits.'
-        },
+        value => !!value || 'El correo electrónico es requerido.',
+        value => validateEmail(value) || 'Ingresa un correo electrónico válido.',
       ],
       password: '',
       confirmPassword: '',
       passwordRules: [
-        v => !!v || 'Password is required',
-        v => (v && v.length >= 8) || 'Password must be at least 8 characters',
+        value => !!value || 'La contraseña es requerida.',
+        value => (value && value.length >= 8) || 'La contraseña debe tener al menos 8 caracteres.',
+      ],
+      confirmPasswordRules: [
+        value => !!value || 'Por favor, confirma tu contraseña.',
+        value => value === this.password || 'Las contraseñas no coinciden.',
       ],
     }),
   computed: {
@@ -72,7 +77,12 @@
   methods: {
     submitForm(e) {
       console.log(e);
-      this.$router.push('/')
+    //   this.$router.push('/')
+    },
+    validateEmail(email) {
+        // Utiliza una expresión regular para validar el formato del correo electrónico
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email);
     },
   },
 }
