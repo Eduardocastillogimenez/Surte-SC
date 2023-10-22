@@ -10,11 +10,11 @@
         ></v-text-field>
 
         <v-text-field
-        v-model="password"
-        label="Password"
-        type="password"
-        :rules="passwordRules"
-        required
+            v-model="password"
+            label="Password"
+            type="password"
+            :rules="passwordRules"
+            required
         ></v-text-field>
 
         <v-btn type="submit" block class="mt-2" color="blue-accent-3" rounded="xl">Inicio de sesion</v-btn>
