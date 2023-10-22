@@ -1,9 +1,10 @@
 <template>
   <v-app-bar flat>
     <v-app-bar-title>
-      <v-icon icon="mdi-circle-slice-4" />
-
-      Surte Sc
+      <div class="d-flex align-center">
+        <img src="src/assets/logo.png" class="mr-2">
+        Surte Sc
+      </div>
     </v-app-bar-title>
   </v-app-bar>
 </template>
