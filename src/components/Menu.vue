@@ -6,6 +6,7 @@
             class="img_menu"
             src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
         ></v-img>
+        Surte SC
     </v-row>
 
     <v-row justify="end" no-gutters>
@@ -16,6 +17,7 @@
         variant="text"
         class="mx-2"
         rounded="xl"
+        :href="getLinkUrl(link)"
       >
         {{ link }}
       </v-btn>
@@ -31,6 +33,17 @@
         'Cerrar sesion',
       ],
     }),
+    methods: {
+        getLinkUrl(link) {
+            if (link === 'Mi ubicacion') {
+                return '/miUbicacion';
+            } else if (link === 'Cerrar sesion') {
+                return '/cerrarSesion';
+            } else {
+                return '/';
+            }
+        },
+    },
   }
 </script>
 
