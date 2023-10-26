@@ -12,7 +12,7 @@
                         <v-col align-self="center" >
                             <v-sheet class="pa-2 ma-2">
                                 <v-autocomplete
-                                    v-model="selectLocation"
+                                    v-model="selectfilter"
                                     :disabled="isUpdating"
                                     :items="sites"
                                     chips
@@ -92,8 +92,8 @@
 
                 
             </v-col>
-        <v-row>
-            <v-col align-self="center" >
+        <v-row  no-gutters class="paginationHome">
+            <v-col align-self="center" cols='12'>
                 <div class="text-center">
                     <v-pagination
                     v-model="page"
@@ -110,7 +110,7 @@
 <script>
     const data = [
             {
-            title: "Whitehaven Beach",
+            title: "La nieve",
             subtitle: "Number 10",
             text: "1h",
             text2: "10",
@@ -146,7 +146,7 @@
     data () {
 
       return {
-        selectLocation: [],
+        selectfilter: [],
         sites: [
           { name: 'Lugar 1', descripcion: 'descripcion site' },
           { name: 'otro lugar', descripcion: 'descripcion ee site' },
@@ -175,11 +175,31 @@
         handleLocationClick(e) {
             console.log(e);
         },
-        loadData() {
+        loadData(e) {
+            if(!this.cards[0] || e[0]==="undefine"){
+                this.cards = data;
+            }else if(e){
+                this.cards =  data.filter(objeto => objeto.title === e);
+            }
+            
             return data; 
         },
     },
     watch: {
+        selectfilter(newSelectFilter){
+            if(newSelectFilter[0]){
+                this.loadData(newSelectFilter[0].name)
+            }else{
+                this.loadData(["undefine"])
+            }
+            
+        },
     },
   }
 </script>
+
+<style>
+.paginationHome{
+    width: 100vw;
+}
+</style>
