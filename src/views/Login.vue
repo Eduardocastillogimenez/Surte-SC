@@ -6,7 +6,7 @@
       <v-text-field
         class="mb-2"
         v-model="email"
-        label="Correo electronico"
+        label="Correo electrónico"
         :rules="emailRules"
         clearable
         variant="outlined"
@@ -37,27 +37,30 @@
 </template>
 
 <script>
+import { loginUser } from '@/services/authServices'
+
   export default {
     data: () => ({
       email: '',
       emailRules: [
-        value => {
-          if (/[^0-9]/.test(value)) return true
-
-          return 'email can not contain digits.'
-        },
+        value => !!value || 'El correo electrónico es requerido.',
+        value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Ingresa un correo electrónico válido.',
       ],
       password: '',
       passwordRules: [
-        v => !!v || 'Password is required',
-      ],
+        value => !!value || 'La contraseña es requerida.',
+        value => (value && value.length >= 8) || 'La contraseña debe tener al menos 8 caracteres.',
+      ]
     }),
   computed: {
   },
   methods: {
-    submitForm(e) {
-      console.log(e);
-      this.$router.push('/')
+    async submitForm(e) {
+      const { data, status } = await loginUser({
+        email: this.email,
+        password: this.password
+      })
+      this.$router.push({ path: '/app' })
     },
   },
 }

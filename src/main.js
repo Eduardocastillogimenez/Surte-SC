@@ -6,6 +6,8 @@
 
 // Components
 import App from './App.vue'
+import ToastPlugin from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-bootstrap.css';
 
 // Composables
 import { createApp } from 'vue'
@@ -14,7 +16,7 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 
 const app = createApp(App)
-
+app.use(ToastPlugin);
 registerPlugins(app)
 
 app.mount('#app')
