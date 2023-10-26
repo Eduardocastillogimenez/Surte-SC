@@ -1,44 +1,57 @@
 <template>
-  <v-sheet width="300" class="mx-auto">
+  <v-sheet width="330" class="mx-auto">
     <v-form fast-fail @submit.prevent="submitForm">
-        <h1> Completa tu registro </h1>
+        <h1 class="text-center mb-11">¡Completa tu registro!</h1>
         <v-text-field
-            v-model="firstName"
-            label="Nombre"
-            :rules="firstNameRules"
-            clearable
-            variant="outlined"
+          class="mb-2"
+          v-model="firstName"
+          label="Nombre"
+          :rules="firstNameRules"
+          clearable
+          variant="outlined"
         ></v-text-field>
 
         <v-text-field
-            v-model="email"
-            label="Correo electronico"
-            :rules="emailRules"
-            clearable
-            variant="outlined"
+          class="mb-2"
+          v-model="email"
+          label="Correo electronico"
+          :rules="emailRules"
+          clearable
+          variant="outlined"
         ></v-text-field>
 
         <v-text-field
-        v-model="password"
-        label="Contraseña"
-        type="password"
-        :rules="passwordRules"
-        required
-        clearable
-        variant="outlined"
+          class="mb-2"
+          v-model="password"
+          label="Contraseña"
+          type="password"
+          :rules="passwordRules"
+          required
+          clearable
+          variant="outlined"
         ></v-text-field>
 
         <v-text-field
-        v-model="confirmPassword"
-        label="Confirmar contraseña"
-        type="password"
-        :rules="confirmPasswordRules"
-        required
-        clearable
-        variant="outlined"
+          class="mb-2"
+          v-model="confirmPassword"
+          label="Confirmar contraseña"
+          type="password"
+          :rules="confirmPasswordRules"
+          required
+          clearable
+          variant="outlined"
         ></v-text-field>
 
-        <v-btn type="submit" block class="mt-2" color="blue-accent-3" rounded="xl">Registro</v-btn>
+        <v-btn
+          type="submit"
+          block
+          class="mt-2"
+          color="blue-accent-3"
+          rounded="lg"
+          size="large"
+        >
+          Registro
+        </v-btn>
     </v-form>
   </v-sheet>
 </template>
