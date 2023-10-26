@@ -1,5 +1,4 @@
 <template>
-  <Menu/>
   <v-container>
     <v-row>
       <v-col>

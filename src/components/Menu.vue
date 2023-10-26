@@ -1,13 +1,11 @@
 <template>
-  <v-footer class="bg-grey-lighten-1">
-    <v-row justify="start" no-gutters>
-        <v-img
-            cover
-            class="img_menu"
-            src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-        ></v-img>
-        Surte SC
-    </v-row>
+  <v-app-bar flat class="light-blue-lighten-5" color="blue-accent-3">
+    <v-app-bar-title>
+      <div class="d-flex align-center">
+        <img src="src/assets/logo.png" class="mr-2">
+        Surte Sc
+      </div>
+    </v-app-bar-title>
 
     <v-row justify="end" no-gutters>
       <v-btn
@@ -22,7 +20,7 @@
         {{ link }}
       </v-btn>
     </v-row>
-  </v-footer>
+  </v-app-bar>
 </template>
 <script>
   export default {

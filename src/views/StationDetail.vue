@@ -1,5 +1,4 @@
 <template>
-  <Menu/>
   <v-container>
   <v-row justify="center">
     <v-col style="height:300px; width:95%">
