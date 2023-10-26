@@ -43,11 +43,11 @@
                             </v-sheet>
                         </v-col>
                     </v-row>
-                </v-container>   
+                </v-container>
             </v-col>
-            <v-col 
+            <v-col
                 v-for="(card, index) in cards"
-                :key="index" 
+                :key="index"
                 sm="12"
                 md="5"
                 xl="4"
@@ -90,7 +90,7 @@
                     </v-card-actions>
                 </v-card>
 
-                
+
             </v-col>
         <v-row>
             <v-col align-self="center" >
@@ -104,82 +104,82 @@
             </v-col>
         </v-row>
         </v-row>
-    </v-container>  
+    </v-container>
 </template>
 
 <script>
-    const data = [
-            {
-            title: "Whitehaven Beach",
-            subtitle: "Number 10",
-            text: "1h",
-            text2: "10",
-            imageSrc:
-                "https://th.bing.com/th/id/R.ad7db4f4c13cb2e070eccc4865def5f5?rik=%2bDExZDKQ9m9TMw&riu=http%3a%2f%2frevistamagazzine.com%2fwp-content%2fuploads%2f2019%2f01%2fimg_4679.jpg&ehk=aHOqCV06wF%2f6hTIbBx4g%2f8tAzZbpCCFetRJuSLyPEF8%3d&risl=&pid=ImgRaw&r=0",
-            },
-            {
-            title: "Estacion de servicio Los Agustinos",
-            subtitle: "",
-            text: "2dias",
-            text2: "100",
-            imageSrc:
-                "https://okdiario.com/img/motor/2017/06/20/gasolineras.jpg",
-            },
-            {
-            title: "Card 3",
-            subtitle: "Subtitle 3",
-            text: "5h",
-            text2: "20",
-            imageSrc:
-                "https://th.bing.com/th/id/R.e4122cecf82cd04eb0f8f91b9974ee00?rik=0Y1ggdPn24okpg&riu=http%3a%2f%2fwww.pressdigital.es%2fimages%2fshowid%2f3709903&ehk=cRlN5Vb77bw05EFLb6r%2bDfJowBr56dv4eqaqaYibl5k%3d&risl=&pid=ImgRaw&r=0",
-            },
-            {
-            title: "Card 4",
-            subtitle: "Subtitle 4",
-            text: "10h",
-            text2: "50",
-            imageSrc:
-                "https://www.elsoldesanluis.com.mx/incoming/ozmfvg-gasolineras-3.jpeg/ALTERNATES/LANDSCAPE_1140/gasolineras%20%20(3).jpeg",
-            },
-        ];
-   export default {
-    data () {
-
-      return {
-        selectLocation: [],
-        sites: [
-          { name: 'Lugar 1', descripcion: 'descripcion site' },
-          { name: 'otro lugar', descripcion: 'descripcion ee site' },
-          { name: 'El espacio', descripcion: 'descripcion fawf site' },
-          { name: 'La nieve', descripcion: 'descripcion aa  site' },
-          { name: 'QUE SE YO', descripcion: 'decion site' },
-        ],
-      
-        page: 1,
-        cards: [],
-      }
+import { getAvailableStations } from "@/services/stationServices";
+const data = [
+  {
+  title: "Whitehaven Beach",
+  subtitle: "Number 10",
+  text: "1h",
+  text2: "10",
+  imageSrc:
+    "https://th.bing.com/th/id/R.ad7db4f4c13cb2e070eccc4865def5f5?rik=%2bDExZDKQ9m9TMw&riu=http%3a%2f%2frevistamagazzine.com%2fwp-content%2fuploads%2f2019%2f01%2fimg_4679.jpg&ehk=aHOqCV06wF%2f6hTIbBx4g%2f8tAzZbpCCFetRJuSLyPEF8%3d&risl=&pid=ImgRaw&r=0",
+  },
+  {
+  title: "Estacion de servicio Los Agustinos",
+  subtitle: "",
+  text: "2dias",
+  text2: "100",
+  imageSrc:
+    "https://okdiario.com/img/motor/2017/06/20/gasolineras.jpg",
+  },
+  {
+  title: "Card 3",
+  subtitle: "Subtitle 3",
+  text: "5h",
+  text2: "20",
+  imageSrc:
+    "https://th.bing.com/th/id/R.e4122cecf82cd04eb0f8f91b9974ee00?rik=0Y1ggdPn24okpg&riu=http%3a%2f%2fwww.pressdigital.es%2fimages%2fshowid%2f3709903&ehk=cRlN5Vb77bw05EFLb6r%2bDfJowBr56dv4eqaqaYibl5k%3d&risl=&pid=ImgRaw&r=0",
+  },
+  {
+  title: "Card 4",
+  subtitle: "Subtitle 4",
+  text: "10h",
+  text2: "50",
+  imageSrc:
+    "https://www.elsoldesanluis.com.mx/incoming/ozmfvg-gasolineras-3.jpeg/ALTERNATES/LANDSCAPE_1140/gasolineras%20%20(3).jpeg",
+  },
+];
+ export default {
+  data () {
+    return {
+      selectLocation: [],
+      sites: [
+        { name: 'Lugar 1', descripcion: 'descripcion site' },
+        { name: 'otro lugar', descripcion: 'descripcion ee site' },
+        { name: 'El espacio', descripcion: 'descripcion fawf site' },
+        { name: 'La nieve', descripcion: 'descripcion aa  site' },
+        { name: 'QUE SE YO', descripcion: 'decion site' },
+      ],
+      page: 1,
+      cards: [],
+    }
+  },
+  mounted() {
+    this.cards = this.loadData();
+    getAvailableStations();
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(4); //obtener el tamano del pagnation
     },
-    mounted() {
-        this.cards = this.loadData();
+  },
+  methods: {
+    handlePageClick(pageNumber) {
+      this.page = +pageNumber.srcElement.innerText;
+      console.log(+pageNumber.srcElement.innerText);
     },
-    computed: {
-      totalPages() {
-        return Math.ceil(4); //obtener el tamano del pagnation
-      },   
+    handleLocationClick(e) {
+      console.log(e);
     },
-    methods: {
-        handlePageClick(pageNumber) {
-            this.page = +pageNumber.srcElement.innerText;
-            console.log(+pageNumber.srcElement.innerText);
-        },
-        handleLocationClick(e) {
-            console.log(e);
-        },
-        loadData() {
-            return data; 
-        },
+    loadData() {
+      return data;
     },
-    watch: {
-    },
-  }
+  },
+  watch: {
+  },
+}
 </script>
