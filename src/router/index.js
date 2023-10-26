@@ -3,8 +3,24 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/',
-    component: () => import('@/layouts/default/Default.vue'),
+    path: '',
+    component: () => import('@/layouts/default/NoLoggedView.vue'),
+    children: [
+      {
+        path: 'login',
+        name: 'Login',
+        component: () => import('@/views/Login.vue'),
+      },
+      {
+        path: 'signIn',
+        name: 'Sign in',
+        component: () => import('@/views/SignIn.vue'),
+      }
+    ]
+  },
+  {
+    path: '/app',
+    component: () => import('@/layouts/default/LoggedView.vue'),
     children: [
       {
         path: '',
@@ -15,7 +31,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue'),
       },
       {
-        path: '/station-detail',
+        path: 'station-detail',
         name: 'StationDetail',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
@@ -23,23 +39,13 @@ const routes = [
         component: () => import(/* webpackChunkName: "home" */ '@/views/StationDetail.vue'),
       },
       {
-        path: '/station-report',
+        path: 'station-report',
         name: 'StationReport',
         // route level code-splitting
         // this generates a separate chunk (about.[hash].js) for this route
         // which is lazy-loaded when the route is visited.
         component: () => import(/* webpackChunkName: "home" */ '@/views/StationReport.vue'),
-      },
-      {
-        path: '/login',
-        name: 'Login',
-        component: () => import('@/views/Login.vue'),
-      },
-      {
-        path: '/signIn',
-        name: 'Sign in',
-        component: () => import('@/views/SignIn.vue'),
-      },
+      }
     ],
   },
 ]
