@@ -2,7 +2,7 @@
   <v-app>
     <v-main>
       <div class="d-flex flex-column justify-center align-center no-login">
-        <img src="src/assets/logo.svg" class="no-login__main-logo my-4">
+        <img src="@/assets/logo.svg" class="no-login__main-logo my-4">
         <router-view />
       </div>
     </v-main>
