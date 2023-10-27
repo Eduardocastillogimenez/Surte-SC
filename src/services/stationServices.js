@@ -10,19 +10,18 @@ export const getAvailableStations = async (payload) => {
   }
 }
 
-export const getAvailableStationsPut = async (payload) => {
+export const getStation = async (stationId) => {
   try {
-    const { data, status } = await AxiosConfig.put(`/gas_stations`, payload)
+    const { data, status } = await AxiosConfig.get(`/gas_stations/${stationId}`)
     return { data, status }
   } catch (e) {
     throw new Error(e)
   }
 }
 
-
-export const getAvailableStationsPost = async (payload) => {
+export const createReport = async (payload) => {
   try {
-    const { data, status } = await AxiosConfig.post(`/gas_stations`, payload)
+    const { data, status } = await AxiosConfig.post(`/report`, payload)
     return { data, status }
   } catch (e) {
     throw new Error(e)
