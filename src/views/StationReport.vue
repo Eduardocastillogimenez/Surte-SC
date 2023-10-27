@@ -1,10 +1,13 @@
 <template>
   <v-container>
+    <v-row justify="left" class="my-3">
+      <span class="font-weight-bold">Home</span> <v-icon icon="mdi-chevron-right"></v-icon> Añadir información
+    </v-row>
     <v-row>
       <v-col>
         <v-text-field
           readonly
-          model-value="Estación de Servicio Los Augustinos"
+          :model-value="name"
           label="Estación de Servicio"
           variant="outlined"
         />
@@ -52,38 +55,41 @@
             Tiempo Estimado
           </v-card-subtitle>
           <v-card-item class="d-flex justify-center text-h4 font-weight-bold">
-            3h 30 min
+            {{ getEstimatedTime }}
           </v-card-item>
         </v-card>
       </v-col>
     </v-row>
     <v-row>
-      <v-col class="d-flex justify-center">
-        <div class="text-body-1 font-weight-regular">Permitenos estimar mejor el tiempo restante</div>
-      </v-col>
-    </v-row>
-    <v-row>
       <v-col class="d-flex">
-        <v-btn color="amber-lighten-1" class="mx-auto" rounded="xl" size="large">¡Danos acceso a tu ubicación!</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="d-flex">
-        <v-btn color="primary" class="mx-auto" rounded="xl" size="large">Enviar</v-btn>
+        <v-btn color="primary" class="mx-auto" rounded="xl" size="large" @click="updateReport">Enviar</v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { createReport } from '@/services/stationServices'
 import Menu from '@/components/Menu.vue'
+import { minutesToHours } from '@/utils/utils'
 
 export default {
   name: 'StationReport',
   data: () => ({
-    carCounter: 100
+    carCounter: 100,
+    id: undefined,
+    name: ''
   }),
   components: {
+  },
+  mounted() {
+    this.id = this.$route.params.id
+    this.name = this.$route.query.name;
+  },
+  computed: {
+    getEstimatedTime() {
+      return minutesToHours( this.carCounter * 3)
+    }
   },
   methods: {
     addCar(carNumber) {
@@ -91,6 +97,19 @@ export default {
     },
     removeCars(carNumber) {
       this.carCounter -= carNumber
+    },
+    async updateReport() {
+      const { data, status } = await createReport({
+        approx_vehicle: this.carCounter,
+        vehicle_type: "CARRO",
+        type: 'QUEUED',
+        gas_stations_id: this.id,
+        user_id: 2
+      })
+      if(status === 200) {
+        this.$toast.success('Reporte registrado con éxito')
+        this.$router.push({ name: 'StationDetail', params: { id: this.id } })
+      }
     }
   },
 }
