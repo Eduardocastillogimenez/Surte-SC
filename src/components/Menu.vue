@@ -68,7 +68,7 @@
             if (link === 'Mi ubicacion') {
                 return '/app/station-report';
             } else if (link === 'Cerrar sesion') {
-                return '/login';
+                return '/';
             } else if (link === 'Home') {
                 return '/app';
             }
