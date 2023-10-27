@@ -1,5 +1,6 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
+import Auth from '@/guards/Auth'
 
 const routes = [
   {
@@ -21,6 +22,7 @@ const routes = [
   {
     path: '/app',
     component: () => import('@/layouts/default/LoggedView.vue'),
+    beforeEnter: Auth,
     children: [
       {
         path: '',
