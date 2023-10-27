@@ -6,6 +6,7 @@ const routes = [
   {
     path: '',
     component: () => import('@/layouts/default/NoLoggedView.vue'),
+    redirect: '/login',
     children: [
       {
         path: 'login',
