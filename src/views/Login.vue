@@ -1,77 +1,81 @@
 <template>
-  <v-sheet width="300" class="mx-auto">
+  <v-sheet width="330" class="mx-auto">
     <v-form fast-fail @submit.prevent="submitForm">
-        <v-text-field
-            v-model="firstName"
-            label="Nombre"
-            :rules="firstNameRules"
-        ></v-text-field>
+      <h1 class="text-center mb-11">¡Iniciar Sesión!</h1>
 
-        <v-text-field
-            v-model="email"
-            label="Correo electronico"
-            :rules="emailRules"
-        ></v-text-field>
+      <v-text-field
+        class="mb-2"
+        v-model="email"
+        label="Correo electrónico"
+        :rules="emailRules"
+        clearable
+        variant="outlined"
+      ></v-text-field>
 
-        <v-text-field
+      <v-text-field
         v-model="password"
         label="Password"
         type="password"
         :rules="passwordRules"
         required
-        ></v-text-field>
+        clearable
+        variant="outlined"
+      ></v-text-field>
 
-        <v-text-field
-        v-model="confirmPassword"
-        label="Confirm Password"
-        type="password"
-        :rules="[confirmPasswordRules, passwordConfirmationRule]"
-        required
-        ></v-text-field>
+      <v-btn
+        block
+        class="mt-6"
+        color="yellow-accent-4"
+        rounded="lg"
+        size="large"
+        @click="goToRegister"
+      >
+        Ir a registro
+      </v-btn>
 
-        <v-btn type="submit" block class="mt-2">Submit</v-btn>
+      <v-btn
+        type="submit"
+        block
+        class="mt-6"
+        color="blue-accent-3"
+        rounded="lg"
+        size="large"
+      >
+        Inicio de sesion
+      </v-btn>
     </v-form>
   </v-sheet>
 </template>
 
 <script>
+import { loginUser } from '@/services/authServices'
+
   export default {
     data: () => ({
-      firstName: '',
-      firstNameRules: [
-        value => {
-          if (value?.length > 3) return true
-
-          return 'First name must be at least 3 characters.'
-        },
-      ],
-      email: '123',
+      email: '',
       emailRules: [
-        value => {
-          if (/[^0-9]/.test(value)) return true
-
-          return 'email can not contain digits.'
-        },
+        value => !!value || 'El correo electrónico es requerido.',
+        value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || 'Ingresa un correo electrónico válido.',
       ],
       password: '',
-      confirmPassword: '',
       passwordRules: [
-        v => !!v || 'Password is required',
-        v => (v && v.length >= 8) || 'Password must be at least 8 characters',
-      ],
+        value => !!value || 'La contraseña es requerida.',
+        value => (value && value.length >= 8) || 'La contraseña debe tener al menos 8 caracteres.',
+      ]
     }),
   computed: {
-    confirmPasswordRules() {
-      return [
-        v => !!v || 'Please confirm your password',
-        v => v === this.password || 'Passwords do not match',
-      ];
-    },
   },
   methods: {
-    submitForm(e) {
-      console.log(e)
+    async submitForm(e) {
+      const { data, status } = await loginUser({
+        email: this.email,
+        password: this.password
+      })
+      this.$router.push({ path: '/app' })
     },
+    goToRegister() {
+      this.$router.push({ path: '/signIn' })
+    }
   },
 }
 </script>
