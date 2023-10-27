@@ -59,7 +59,6 @@
     data: () => ({
       links: [
         'Home',
-        'Mi ubicacion',
         'Cerrar sesion',
       ],
       drawer: null,
@@ -69,7 +68,7 @@
             if (link === 'Mi ubicacion') {
                 return '/app/station-report';
             } else if (link === 'Cerrar sesion') {
-                return '/app';
+                return '/login';
             } else if (link === 'Home') {
                 return '/app';
             }
