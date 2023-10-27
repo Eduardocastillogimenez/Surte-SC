@@ -88,7 +88,7 @@ export default {
   methods: {
     async submitForm() {
       const { registerResult, status } = await registerUser({
-        userName: this.userName,
+        username: this.userName,
         email: this.email,
         password: this.password,
       })
