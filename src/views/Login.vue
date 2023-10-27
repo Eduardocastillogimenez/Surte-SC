@@ -23,6 +23,17 @@
       ></v-text-field>
 
       <v-btn
+        block
+        class="mt-6"
+        color="yellow-accent-4"
+        rounded="lg"
+        size="large"
+        @click="goToRegister"
+      >
+        Ir a registro
+      </v-btn>
+
+      <v-btn
         type="submit"
         block
         class="mt-6"
@@ -62,6 +73,9 @@ import { loginUser } from '@/services/authServices'
       })
       this.$router.push({ path: '/app' })
     },
+    goToRegister() {
+      this.$router.push({ path: '/signIn' })
+    }
   },
 }
 </script>
