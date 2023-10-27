@@ -84,7 +84,7 @@
                         Informacion
                     </v-btn>
 
-                    <v-btn color="yellow-accent-4" rounded="xl" variant="flat" :href="'/miUbicacion'">
+                    <v-btn color="yellow-accent-4" rounded="xl" variant="flat" @click="goToStationReport(card)">
                         Estoy aqui
                     </v-btn>
                     </v-card-actions>
@@ -190,6 +190,9 @@ import { getAvailableStations } from "@/services/stationServices"
     },
     goToStationDetail(station) {
       this.$router.push({ name: "StationDetail", params: { id: station.id } })
+    },
+    goToStationReport(station) {
+      this.$router.push({ name: "StationReport", params: { id: station.id }, query: { name: station.name } })
     },
   },
   watch: {
