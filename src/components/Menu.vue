@@ -46,6 +46,7 @@
         v-for="link in links"
         :key="link"
         :value="link"
+        @click="handlePageClick(link)"
         :href="getLinkUrl(link)"
       >
         {{ link }}
@@ -66,12 +67,17 @@
     methods: {
         getLinkUrl(link) {
             if (link === 'Mi ubicacion') {
-                return '/miUbicacion';
+                return '/app/station-report';
             } else if (link === 'Cerrar sesion') {
-                return '/cerrarSesion';
-            } else {
-                return '/';
+                return '/app';
+            } else if (link === 'Home') {
+                return '/app';
             }
+        },
+        cerrarSesion(link) {
+          if(link === 'Cerrar sesion'){
+            localStorage.clear();
+          }
         },
     },
   }
