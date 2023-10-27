@@ -59,10 +59,10 @@
                     <v-img
                     class="align-end text-white"
                     height="200"
-                    :src="card.imageSrc"
+                    :src="card.image_path"
                     cover
                     >
-                        <v-card-title>{{ card.title }}</v-card-title>
+                        <v-card-title>{{ card.name }}</v-card-title>
                     </v-img>
 
                     <!-- <v-card-subtitle class="pt-4">
@@ -99,6 +99,7 @@
                     v-model="page"
                     :length="totalPages"
                     @click="handlePageClick"
+                    :disabled="selectfilter[0] !== undefined"
                     ></v-pagination>
                 </div>
             </v-col>
@@ -109,85 +110,86 @@
 
 <script>
 import { getAvailableStations } from "@/services/stationServices"
-const data = [
-  {
-  title: "Whitehaven Beach",
-  subtitle: "Number 10",
-  text: "1h",
-  text2: "10",
-  imageSrc:
-    "https://th.bing.com/th/id/R.ad7db4f4c13cb2e070eccc4865def5f5?rik=%2bDExZDKQ9m9TMw&riu=http%3a%2f%2frevistamagazzine.com%2fwp-content%2fuploads%2f2019%2f01%2fimg_4679.jpg&ehk=aHOqCV06wF%2f6hTIbBx4g%2f8tAzZbpCCFetRJuSLyPEF8%3d&risl=&pid=ImgRaw&r=0",
-  },
-  {
-  title: "Estacion de servicio Los Agustinos",
-  subtitle: "",
-  text: "2dias",
-  text2: "100",
-  imageSrc:
-    "https://okdiario.com/img/motor/2017/06/20/gasolineras.jpg",
-  },
-  {
-  title: "Card 3",
-  subtitle: "Subtitle 3",
-  text: "5h",
-  text2: "20",
-  imageSrc:
-    "https://th.bing.com/th/id/R.e4122cecf82cd04eb0f8f91b9974ee00?rik=0Y1ggdPn24okpg&riu=http%3a%2f%2fwww.pressdigital.es%2fimages%2fshowid%2f3709903&ehk=cRlN5Vb77bw05EFLb6r%2bDfJowBr56dv4eqaqaYibl5k%3d&risl=&pid=ImgRaw&r=0",
-  },
-  {
-  title: "Card 4",
-  subtitle: "Subtitle 4",
-  text: "10h",
-  text2: "50",
-  imageSrc:
-    "https://www.elsoldesanluis.com.mx/incoming/ozmfvg-gasolineras-3.jpeg/ALTERNATES/LANDSCAPE_1140/gasolineras%20%20(3).jpeg",
-  },
-];
+// const data = [
+//   {
+//   title: "Whitehaven Beach",
+//   subtitle: "Number 10",
+//   text: "1h",
+//   text2: "10",
+//   imageSrc:
+//     "https://th.bing.com/th/id/R.ad7db4f4c13cb2e070eccc4865def5f5?rik=%2bDExZDKQ9m9TMw&riu=http%3a%2f%2frevistamagazzine.com%2fwp-content%2fuploads%2f2019%2f01%2fimg_4679.jpg&ehk=aHOqCV06wF%2f6hTIbBx4g%2f8tAzZbpCCFetRJuSLyPEF8%3d&risl=&pid=ImgRaw&r=0",
+//   },
+// ];
  export default {
   data () {
     return {
+      data: [],
       selectfilter: [],
-      sites: [
-        { name: 'Lugar 1', descripcion: 'descripcion site' },
-        { name: 'otro lugar', descripcion: 'descripcion ee site' },
-        { name: 'El espacio', descripcion: 'descripcion fawf site' },
-        { name: 'La nieve', descripcion: 'descripcion aa  site' },
-        { name: 'QUE SE YO', descripcion: 'decion site' },
-      ],
+      sites: [],
       page: 1,
       cards: [],
     }
   },
-  mounted() {
-    this.cards = this.loadData();
+  async mounted() {
+    // this.cards = await this.loadData(["undefine"])
+    this.loadPagination(1)
+    // this.data = await this.loadData(["undefine"])
+    this.sites = await this.loadSites()
   },
   computed: {
     totalPages() {
-      return Math.ceil(4); //obtener el tamano del pagnation
+      const len = this.data.length >10 ? this.data : 10
+      const groups = Math.ceil(this.data.length / 10)
+
+      return Math.ceil(+groups) //obtener el tamano del pagnation
     },
   },
   methods: {
     handlePageClick(pageNumber) {
-      this.page = +pageNumber.srcElement.innerText;
-      console.log(+pageNumber.srcElement.innerText);
-    },
-    handleLocationClick(e) {
-      console.log(e);
-    },
-    loadData(e) {
-      getAvailableStations();
-      if(!this.cards[0] || e[0]==="undefine"){
-        this.cards = data;
-      }else if(e){
-        this.cards =  data.filter(objeto => objeto.title === e);
+      if(!this.selectfilter[0]){
+        this.page = +pageNumber.srcElement.innerText;
+        this.loadPagination(+pageNumber.srcElement.innerText)
       }
-      return data;
+      
+    },
+    async loadData(e) {
+      const { data } = await getAvailableStations("")
+  
+      if(!this.cards[0] || e[0]==="undefine"){
+        this.cards = data
+      }else if(e){
+        this.cards = data.filter(objeto => e.some(item => item.name === objeto.name));
+      }
+      return data
+    },
+    async loadSites() {
+      const { data, status } = await getAvailableStations("")
+      // if(data){ 
+      //   data = data.map((e)=> {
+      //     if(e){
+      //       return(
+      //           { name: e.name, descripcion: e.neighborhood.city }
+      //         )
+      //     }
+      //   });
+      // }
+    
+      return data
+    },
+    async loadPagination(n) {
+      const { data } = await getAvailableStations("")
+      if(!this.data[0]){
+        this.data = data
+      }
+      let startIndex = (n - 1) * 10;
+      let endIndex = startIndex + 10;
+      this.cards = data.filter((objeto, index) => index >= startIndex && index < endIndex);
     },
   },
   watch: {
     selectfilter(newSelectFilter){
       if(newSelectFilter[0]){
-        this.loadData(newSelectFilter[0].name)
+        this.loadData(newSelectFilter)
       }else{
         this.loadData(["undefine"])
       }
