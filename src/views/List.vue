@@ -71,10 +71,10 @@
 
                     <v-card-text>
                         <p>
-                            <v-icon icon="mdi-information"></v-icon> Tiempo estimado: {{ card.text }}
+                            <v-icon icon="mdi-information"></v-icon> Tiempo estimado: {{ card.latest_report ? `${card.latest_report?.approx_vehicle * 2} min` : '-' }}
                         </p>
                         <p>
-                            <v-icon icon="mdi-antenna"></v-icon> aprox. en fila: {{ card.text2 }}
+                            <v-icon icon="mdi-antenna"></v-icon> aprox. en fila: {{ card.latest_report ? `${card.latest_report?.approx_vehicle} vehiculos` : '-'  }} 
                         </p>
 
                     </v-card-text>
@@ -178,6 +178,9 @@ import { getAvailableStations } from "@/services/stationServices"
     },
     async loadPagination(n) {
       const { data } = await getAvailableStations("")
+      console.log(data)
+      data.latest_report?.approx_vehicle 
+
       if(!this.data[0]){
         this.data = data
       }
