@@ -14,13 +14,24 @@
 
       <v-text-field
         v-model="password"
-        label="Password"
+        label="Contraseña"
         type="password"
         :rules="passwordRules"
         required
         clearable
         variant="outlined"
       ></v-text-field>
+
+      <v-btn
+        block
+        class="mt-6"
+        color="yellow-accent-4"
+        rounded="lg"
+        size="large"
+        @click="goToRegister"
+      >
+        Ir a registro
+      </v-btn>
 
       <v-btn
         type="submit"
@@ -62,6 +73,9 @@ import { loginUser } from '@/services/authServices'
       })
       this.$router.push({ path: '/app' })
     },
+    goToRegister() {
+      this.$router.push({ path: '/signIn' })
+    }
   },
 }
 </script>
