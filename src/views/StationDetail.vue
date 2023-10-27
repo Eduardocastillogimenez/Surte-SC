@@ -1,5 +1,8 @@
 <template>
   <v-container>
+    <v-row justify="left" class="my-3">
+      <span class="font-weight-bold">Home</span> <v-icon icon="mdi-chevron-right"></v-icon> {{ name }}
+    </v-row>
   <v-row justify="center">
     <v-col style="height:300px; width:95%">
       <l-map ref="map" v-model:zoom="zoom" :center="[7.76694, -72.225]" :useGlobalLeaflet="false">
@@ -8,6 +11,13 @@
           layer-type="base"
           name="OpenStreetMap"
         ></l-tile-layer>
+        <l-marker v-if="coordinates !== undefined" :lat-lng="coordinates">
+          <l-tooltip :options="{ permanent: true, interactive: true }">
+            <div>
+              {{ name }}
+            </div>
+          </l-tooltip>
+        </l-marker>
       </l-map>
     </v-col>
   </v-row>
@@ -21,7 +31,7 @@
             Tiempo Estimado
           </v-card-subtitle>
           <v-card-item class="d-flex justify-center text-h4 font-weight-bold">
-            3h
+            {{ lastUpdate.approxTime ?? '-' }}
           </v-card-item>
         </v-card>
       </v-col>
@@ -34,7 +44,7 @@
             Vehículos en fila
           </v-card-subtitle>
           <v-card-item class="d-flex justify-center text-h4 font-weight-bold">
-            100
+            {{ lastUpdate.approxVehicle ?? '-' }}
           </v-card-item>
         </v-card>
       </v-col>
@@ -49,7 +59,7 @@
             Última vez actualizada
           </v-card-subtitle>
           <v-card-item class="d-flex justify-center text-h4 font-weight-bold">
-            3h 30 min
+            {{ lastUpdate.date ?? '-' }}
           </v-card-item>
         </v-card>
       </v-col>
@@ -64,7 +74,7 @@
           <v-card-subtitle class="d-flex justify-center font-weight-bold">
           </v-card-subtitle>
           <v-card-item class="d-flex justify-center">
-            <v-btn color="primary" class="mx-auto" rounded="xl" size="large">Estoy en la estación</v-btn>
+            <v-btn color="primary" class="mx-auto" rounded="xl" size="large" @click="goToStationReport">Estoy en la estación</v-btn>
           </v-card-item>
         </v-card>
       </v-col>
@@ -73,19 +83,63 @@
 </template>
 
 <script>
+import moment from 'moment'
+import { latLng } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { LMap, LTileLayer } from "@vue-leaflet/vue-leaflet";
+import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import Menu from '@/components/Menu.vue'
+import { getStation } from '@/services/stationServices'
 
 export default {
   name: 'StationDetail',
   data: () => ({
-    zoom: 11
+    zoom: 11,
+    id: undefined,
+    diesel: undefined,
+    image_path: undefined,
+    coordinates: undefined,
+    name: undefined,
+    lastUpdate: {
+      approxVehicle: undefined,
+      approxTime: undefined,
+      date: undefined
+    }
   }),
   components: {
+    LTooltip,
     LMap,
     LTileLayer,
+    LMarker,
   },
+  async mounted() {
+    await this.loadData()
+  },
+  methods: {
+    async loadData() {
+      this.id = this.$route.params.id
+      const { data, status } = await getStation(this.id)
+      this.diesel = data.diesel
+      this.image_path = data.image_path
+      this.coordinates = latLng(data.latitude, data.longitude),
+      this.name = data.name
+      if(data.latest_report !== undefined && data.latest_report !== null) {
+        this.lastUpdate.approxVehicle = data.latest_report.approx_vehicle
+        this.lastUpdate.approxTime = this.minutesToHours(data.estimated_time)
+        this.lastUpdate.date = moment(data.latest_report.date).startOf('hour').fromNow();
+      }
+    },
+    minutesToHours(minutes) {
+      // Calculate hours and the remaining minutes
+      var hours = Math.floor(minutes / 60);
+      var remainingMinutes = minutes % 60;
+
+      // Return the time in the format "hours:minutes"
+      return hours + "h " + remainingMinutes + "m";
+    },
+    goToStationReport() {
+      this.$router.push({ name: 'StationReport', params: { id: this.id } })
+    }
+  }
 }
 </script>
 <style scoped>
