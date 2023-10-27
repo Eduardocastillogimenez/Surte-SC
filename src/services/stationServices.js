@@ -18,3 +18,12 @@ export const getStation = async (stationId) => {
     throw new Error(e)
   }
 }
+
+export const createReport = async (payload) => {
+  try {
+    const { data, status } = await AxiosConfig.post(`/report`, payload)
+    return { data, status }
+  } catch (e) {
+    throw new Error(e)
+  }
+}

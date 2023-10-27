@@ -1,8 +1,8 @@
 <template>
   <v-container>
-    <v-row justify="left" class="my-3">
-      <span class="font-weight-bold">Home</span> <v-icon icon="mdi-chevron-right"></v-icon> {{ name }}
-    </v-row>
+  <v-row justify="left" class="my-3">
+    <span class="font-weight-bold">Home</span> <v-icon icon="mdi-chevron-right"></v-icon> {{ name }}
+  </v-row>
   <v-row justify="center">
     <v-col style="height:300px; width:95%">
       <l-map ref="map" v-model:zoom="zoom" :center="[7.76694, -72.225]" :useGlobalLeaflet="false">
@@ -89,6 +89,7 @@ import "leaflet/dist/leaflet.css";
 import { LMap, LTileLayer, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
 import Menu from '@/components/Menu.vue'
 import { getStation } from '@/services/stationServices'
+import { minutesToHours } from '@/utils/utils'
 
 export default {
   name: 'StationDetail',
@@ -124,20 +125,18 @@ export default {
       this.name = data.name
       if(data.latest_report !== undefined && data.latest_report !== null) {
         this.lastUpdate.approxVehicle = data.latest_report.approx_vehicle
-        this.lastUpdate.approxTime = this.minutesToHours(data.estimated_time)
-        this.lastUpdate.date = moment(data.latest_report.date).startOf('hour').fromNow();
+        this.lastUpdate.approxTime = minutesToHours(data.estimated_time)
+        this.lastUpdate.date = moment(`${data.latest_report.updated_at}Z`).fromNow();
       }
     },
-    minutesToHours(minutes) {
-      // Calculate hours and the remaining minutes
-      var hours = Math.floor(minutes / 60);
-      var remainingMinutes = minutes % 60;
-
-      // Return the time in the format "hours:minutes"
-      return hours + "h " + remainingMinutes + "m";
-    },
     goToStationReport() {
-      this.$router.push({ name: 'StationReport', params: { id: this.id } })
+      this.$router.push({
+        name: 'StationReport',
+        params: { id: this.id },
+        query: {
+          name: this.name
+        }
+      })
     }
   }
 }
