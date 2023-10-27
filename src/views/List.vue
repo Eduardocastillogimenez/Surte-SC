@@ -80,7 +80,7 @@
                     </v-card-text>
 
                     <v-card-actions>
-                    <v-btn color="blue-accent-3" variant="flat" rounded="xl" :href="'/informacion'">
+                    <v-btn color="blue-accent-3" variant="flat" rounded="xl" @click="goToStationDetail(card)">
                         Informacion
                     </v-btn>
 
@@ -150,11 +150,11 @@ import { getAvailableStations } from "@/services/stationServices"
         this.page = +pageNumber.srcElement.innerText;
         this.loadPagination(+pageNumber.srcElement.innerText)
       }
-      
+
     },
     async loadData(e) {
       const { data } = await getAvailableStations("")
-  
+
       if(!this.cards[0] || e[0]==="undefine"){
         this.cards = data
       }else if(e){
@@ -164,7 +164,7 @@ import { getAvailableStations } from "@/services/stationServices"
     },
     async loadSites() {
       const { data, status } = await getAvailableStations("")
-      // if(data){ 
+      // if(data){
       //   data = data.map((e)=> {
       //     if(e){
       //       return(
@@ -173,7 +173,7 @@ import { getAvailableStations } from "@/services/stationServices"
       //     }
       //   });
       // }
-    
+
       return data
     },
     async loadPagination(n) {
@@ -187,6 +187,9 @@ import { getAvailableStations } from "@/services/stationServices"
       let startIndex = (n - 1) * 10;
       let endIndex = startIndex + 10;
       this.cards = data.filter((objeto, index) => index >= startIndex && index < endIndex);
+    },
+    goToStationDetail(station) {
+      this.$router.push({ name: "StationDetail", params: { id: station.id } })
     },
   },
   watch: {
